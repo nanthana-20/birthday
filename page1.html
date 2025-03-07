@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudy Boy</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Georgia', serif; /* Classic font style */
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            transition: background-image 2s ease-in-out; /* Smooth fade for background image */
+        }
+
+        .background {
+            background-image: url('https://i.postimg.cc/tRNTRpqZ/Whats-App-Image-2025-03-07-at-12-15-31-AM.jpg'); /* First background image */
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+            position: absolute;
+            width: 100%;
+            z-index: -1;
+            transition: opacity 2s ease-in-out; /* Fade-out effect */
+        }
+
+        .story-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+            color: #333333; /* Dark text color for better visibility */
+            text-align: center;
+            position: relative;
+        }
+
+        .title {
+            font-size: 3em;
+            opacity: 1;
+            transition: opacity 2s;
+            position: absolute;
+            left: 20px; /* Left-aligned */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%);
+            font-family: 'Georgia', serif;
+            color: #3b2f2f;
+        }
+
+        .story-text {
+            font-size: 1.5em;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 2s;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-width: 80%;
+        }
+
+        .end {
+            font-size: 2em;
+            margin-top: 50px;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background" id="background"></div>
+
+    <div class="story-container">
+        <div class="title" id="title">Cloudy Boy</div>
+        <div class="story-text" id="story-text"></div>
+        <div class="end" id="end">The End</div>
+    </div>
+
+    <script>
+        // Title fade-in
+        window.onload = () => {
+            setTimeout(fadeOutTitleAndStartStory, 2000); // Wait for title fade-out
+        };
+
+        // The four lines of the story
+        const storyLines = [
+            "A Boy walked through the quiet street as dark clouds gathered.",
+            "A gust of wind carried an umbrella into the sky.",
+            "He looked up, pointing at it. 'Cloud', he thought.",
+            "He stood still, watching as the umbrella floated away."
+        ];
+
+        // Background images for each line
+        const backgroundImages = [
+            "url('https://i.postimg.cc/VsK1vFT1/openart-image-IWn-Plx-N-1741285010440-raw.jpg')", // First image
+            "url('https://i.postimg.cc/G2MNLXp5/openart-image-s-WElsf-Dp-1741285116516-raw.jpg')", // Second image
+            "url('https://i.postimg.cc/4d3LSp1b/openart-image-z0-I1-Rz-L2-1741285221970-raw.jpg')", // Third image
+            "url('https://i.postimg.cc/B68yvx1Z/openart-image-LLQb-Ao-T2-1741285385150-raw.jpg')"  // Fourth image
+        ];
+
+        function fadeOutTitleAndStartStory() {
+            // Fade out the title and background
+            document.getElementById('title').style.opacity = 0;
+            document.getElementById('background').style.opacity = 0;
+            setTimeout(startStory, 2000); // Wait for the fade-out before starting the story
+        }
+
+        function startStory() {
+            let i = 0;
+            let textContainer = document.getElementById('story-text');
+            let background = document.getElementById('background');
+
+            let interval = setInterval(() => {
+                // Change background image for each line
+                background.style.backgroundImage = backgroundImages[i]; // Update background
+                background.style.opacity = 1; // Fade in background
+
+                // Update the text for the current line
+                textContainer.innerText = storyLines[i];
+                textContainer.style.opacity = 1; // Fade in the text
+
+                // Fade out the text and image after displaying for a while
+                setTimeout(() => {
+                    textContainer.style.opacity = 0; // Fade out text
+                    background.style.opacity = 0; // Fade out background
+                }, 3000); // Text and background remain for 3 seconds
+
+                i++;
+
+                if (i === storyLines.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('end').style.opacity = 1;
+                    }, 1000); // Show "The End" after the story is complete
+                }
+            }, 5000); // Change text and background every 5 seconds
+        }
+    </script>
+
+</body>
+</html>

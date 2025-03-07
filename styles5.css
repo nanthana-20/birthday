@@ -1,0 +1,60 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-image: url(https://i.postimg.cc/QNbGWqtf/Deep-Space-Backgrounds.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    color: white;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+canvas {
+    background-color:black;
+    border: 2px solid black;
+}
+
+.instructions {
+    background-color: #222;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    width: 200px;
+    text-align: left;
+}
+
+.instructions h2 {
+    font-size: 22px;
+    color: gold;
+}
+
+.instructions p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+button {
+    margin-top: 20px;
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: gold;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.hidden {
+    display: none;
+}

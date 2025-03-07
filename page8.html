@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosemilk Delight</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background-image: url('https://i.postimg.cc/Y9rFWYNg/cd1783ef9fcc4abf075ae1651034c91c.jpg'); 
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #382636;
+            overflow: hidden;
+        }
+
+        .glass-container {
+            position: relative;
+            width: 200px; /* Bigger glass */
+            height: 300px; /* Taller */
+            background: transparent;
+            border: 5px solid white;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .rosemilk {
+            width: 100%;
+            height: 0%;
+            background: #ffb6c1;
+            position: absolute;
+            bottom: 0;
+            transition: height 0.3s ease-in-out;
+        }
+
+        .straw {
+            width: 12px;
+            height: 120px;
+            background: pink;
+            position: absolute;
+            top: -150px; /* Starts hidden */
+            right: 30px;
+            border-radius: 5px;
+            transform: rotate(10deg);
+            transition: top 1s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .wiggle {
+            animation: wiggle 0.5s ease-in-out 3;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+        }
+
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            bottom: 0;
+            animation: floatUp 3s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-250px) scale(1.5); opacity: 0; }
+        }
+
+        .refresh-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Tap to Fill the Rosemilk! 🥤</h1>
+    <div class="glass-container" onclick="fillRosemilk()">
+        <div class="rosemilk" id="rosemilk"></div>
+        <div class="straw" id="straw"></div>
+    </div>
+
+    <div class="refresh-text" id="refreshText">✨Refreshing!✨</div>
+
+    <script>
+        let fillLevel = 0;
+
+        function fillRosemilk() {
+            if (fillLevel < 100) {
+                fillLevel += 10;
+                document.getElementById("rosemilk").style.height = fillLevel + "%";
+                createBubble(); // Create bubbles while filling
+            }
+
+            if (fillLevel === 100) {
+                let straw = document.getElementById("straw");
+                straw.style.top = "30px"; // Drops straw into glass
+
+                setTimeout(() => {
+                    straw.classList.add("wiggle"); // Wiggle effect
+                }, 1000);
+
+                setTimeout(() => {
+                    document.getElementById("refreshText").style.opacity = "1"; // Show "Refreshing!"
+                }, 1200);
+            }
+        }
+
+        function createBubble() {
+            let bubble = document.createElement("div");
+            bubble.classList.add("bubble");
+            bubble.style.left = Math.random() * 80 + "px"; // Randomize bubble position
+            document.body.appendChild(bubble);
+
+            setTimeout(() => bubble.remove(), 3000);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Flight Challenge</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+            background: url('https://i.postimg.cc/44qMTkDD/a8054bd49daa169530dcb99b0c606a66.gif') no-repeat center center/cover; 
+            overflow: hidden;
+        }
+        canvas { background: transparent; display: block; margin: auto; }
+        #startScreen, #gameOverScreen {
+            position: absolute; 
+            width: 100%; 
+            height: 100vh; 
+            background: rgba(255, 255, 255, 0.9); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        #startScreen h1, #gameOverScreen h1 { font-size: 30px; color: #333; }
+        #startScreen p, #gameOverScreen p { font-size: 20px; color: #555; }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border: none;
+            background: #ffb6c1;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover { background: #ff4d6d; }
+        #scoreDisplay { 
+            position: absolute; 
+            top: 10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="startScreen">
+        <h1>🌤️ Sky Flight Challenge 👤✨</h1>
+        <p>Press SPACEBAR to flap your wings and stay in the air!</p>
+        <p>Avoid the dark plants and collect light orbs for points!</p>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <div id="gameOverScreen" style="display: none;">
+        <h1>Game Over, Traveller... 💀</h1>
+        <p>Your Score: <span id="finalScore">0</span></p>
+        <button onclick="restartGame()">A New Journey-Restart</button>
+    </div>
+
+    <div id="scoreDisplay">Score: 0</div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 800;
+        canvas.height = 400;
+
+        let skyKid, gravity, lift, obstacles, lights, score, gameRunning;
+
+        function startGame() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("gameOverScreen").style.display = "none";
+            gameRunning = true;
+
+            skyKid = { x: 100, y: 200, size: 30, velocity: 0 };
+            gravity = 0.6;
+            lift = -10;
+            obstacles = [];
+            lights = [];
+            score = 0;
+
+            gameLoop();
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            skyKid.velocity += gravity;
+            skyKid.y += skyKid.velocity;
+
+            if (skyKid.y >= canvas.height - skyKid.size) skyKid.y = canvas.height - skyKid.size;
+            if (skyKid.y <= 0) skyKid.y = 0;
+
+            ctx.fillStyle = "#ffb6c1";
+            ctx.beginPath();
+            ctx.arc(skyKid.x, skyKid.y, skyKid.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (Math.random() < 0.02) {
+                obstacles.push({ x: canvas.width, y: Math.random() * (canvas.height - 50), size: 40 });
+            }
+            if (Math.random() < 0.02) {
+                lights.push({ x: canvas.width, y: Math.random() * (canvas.height - 50), size: 20 });
+            }
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= 5;
+                ctx.fillStyle = "#4a4a4a";
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].size, obstacles[i].size);
+
+                if (skyKid.x < obstacles[i].x + obstacles[i].size &&
+                    skyKid.x + skyKid.size > obstacles[i].x &&
+                    skyKid.y < obstacles[i].y + obstacles[i].size &&
+                    skyKid.y + skyKid.size > obstacles[i].y) {
+                    gameOver();
+                }
+
+                if (obstacles[i].x < -obstacles[i].size) obstacles.splice(i, 1);
+            }
+
+            for (let i = lights.length - 1; i >= 0; i--) {
+                lights[i].x -= 5;
+                ctx.fillStyle = "#ffff66";
+                ctx.beginPath();
+                ctx.arc(lights[i].x, lights[i].y, lights[i].size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (skyKid.x < lights[i].x + lights[i].size &&
+                    skyKid.x + skyKid.size > lights[i].x &&
+                    skyKid.y < lights[i].y + lights[i].size &&
+                    skyKid.y + skyKid.size > lights[i].y) {
+                    score += 10;
+                    lights.splice(i, 1);
+                }
+
+                if (lights[i]?.x < -lights[i]?.size) lights.splice(i, 1);
+            }
+
+            document.getElementById("scoreDisplay").innerText = "Score: " + score;
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById("finalScore").innerText = score;
+            document.getElementById("gameOverScreen").style.display = "flex";
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && gameRunning) skyKid.velocity = lift;
+        });
+    </script>
+
+</body>
+</html>

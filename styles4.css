@@ -1,0 +1,74 @@
+body {
+    background-image: url(https://i.postimg.cc/SRT3b7Vf/download-10.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: #6d6875;
+}
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.word-list, .instructions {
+    width: 200px;
+}
+
+.word-list h2, .instructions h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color:#201630
+}
+
+.word-list ul {
+    list-style: none;
+    padding: 0;
+    color:#201630;
+}
+
+.word-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    margin: 5px 0;
+    color:#201630;
+}
+
+.word-search {
+    position: relative;
+    background-color: white;
+    padding: 10px;
+}
+
+canvas {
+    border: 2px solid black;
+}
+
+.hidden {
+    display: none;
+}
+
+#congrats-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: gold;
+    color: black;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}

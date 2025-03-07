@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creeper… Aww Man!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            color: white;
+            font-family: "Arial", sans-serif;
+        }
+
+        /* Starry Background */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+
+        /* Counter */
+        #counter {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Creeper */
+        .creeper {
+            position: absolute;
+            width: 80px;
+            height: 120px;
+            background: green;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: left 10s linear; /* Slower movement */
+        }
+
+        /* Creeper Face */
+        .creeper::before {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: black;
+            top: 20px;
+            clip-path: polygon(20% 30%, 40% 30%, 40% 50%, 60% 50%, 60% 30%, 80% 30%, 80% 60%, 70% 70%, 70% 80%, 30% 80%, 30% 70%, 20% 60%);
+        }
+
+        /* Heart Explosion */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            clip-path: polygon(50% 15%, 61% 9%, 75% 9%, 82% 15%, 85% 24%, 85% 34%, 78% 44%, 50% 75%, 22% 44%, 15% 34%, 15% 24%, 18% 15%, 25% 9%, 39% 9%);
+            opacity: 1;
+            animation: pop 1s ease-out forwards;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5) translate(0, 0); opacity: 1; }
+            100% { transform: scale(1.2) translate(var(--x), var(--y)); opacity: 0; }
+        }
+
+        /* Big Birthday Message */
+        #birthdayMessage {
+            position: absolute;
+            font-size: 50px;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 2px 2px 10px white;
+            opacity: 0;
+            display: none;
+            animation: appear 1s ease-out forwards;
+        }
+
+        @keyframes appear {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <audio id="boom" src="https://www.myinstants.com/media/sounds/minecraft-creeper-explosion.mp3"></audio>
+
+    <div id="counter">Creepers Left: 19</div>
+    <div id="birthdayMessage">HAPPY BIRTHDAY DIAMOND HOE 🎉💎</div>
+
+    <script>
+        let boomSound = document.getElementById("boom");
+        let creeperCount = 19;
+        let clickedCount = 0; // Tracks only clicked creepers
+
+        function updateCounter() {
+            document.getElementById("counter").textContent = `Creepers Left: ${creeperCount}`;
+        }
+
+        function createCreeper() {
+            if (creeperCount <= 0) return; // Stop when all creepers are spawned
+
+            let creeper = document.createElement("div");
+            creeper.classList.add("creeper");
+            document.body.appendChild(creeper);
+
+            // Randomize start position
+            let startTop = Math.random() * (window.innerHeight - 150);
+            creeper.style.top = `${startTop}px`;
+            creeper.style.left = "-100px";
+
+            // Move creeper to the right
+            setTimeout(() => {
+                creeper.style.left = "100%";
+            }, 100);
+
+            // On click → BOOM + Hearts Explosion
+            creeper.onclick = function() {
+                boomSound.play();
+                createHeartExplosion(creeper.offsetLeft + 40, creeper.offsetTop + 50);
+                creeper.remove();
+                creeperCount--;
+                clickedCount++; // Count only clicked creepers
+                updateCounter();
+
+                // When all creepers are clicked, hide counter & show message
+                if (clickedCount === 19) {
+                    setTimeout(() => {
+                        document.getElementById("counter").style.display = "none";
+                        document.getElementById("birthdayMessage").style.display = "block";
+                    }, 1000);
+                }
+            };
+
+            // Spawn the next creeper after 1.5 seconds
+            if (creeperCount > 1) {
+                setTimeout(() => createCreeper(), 1500);
+            }
+        }
+
+        function createHeartExplosion(x, y) {
+            for (let i = 0; i < 25; i++) { // 25 hearts popping
+                let heart = document.createElement("div");
+                heart.classList.add("heart");
+                document.body.appendChild(heart);
+
+                // Random explosion effect
+                let offsetX = (Math.random() - 0.5) * 200 + "px"; 
+                let offsetY = (Math.random() - 1) * 200 + "px"; 
+                heart.style.left = `${x}px`;
+                heart.style.top = `${y}px`;
+                heart.style.setProperty("--x", offsetX);
+                heart.style.setProperty("--y", offsetY);
+
+                // Remove heart after animation
+                setTimeout(() => heart.remove(), 1000);
+            }
+        }
+
+        // Start spawning creepers
+        createCreeper();
+    </script>
+
+</body>
+</html>
